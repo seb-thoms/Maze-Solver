@@ -1,7 +1,8 @@
+from objects import Objects
 from collections import deque
 from typing import List
 
-class searchAlgorithms:
+class SearchAlgorithms:
     def __init__(self, maze: List[List[int]], size: int, start: tuple, goal: tuple) -> None:
         self.maze = maze
         self.size = size
@@ -24,13 +25,13 @@ class searchAlgorithms:
             
             for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
                 nx, ny = x + dx, y + dy
-                if((0 <= nx < self.size) and (0 <=ny < self.size)):
+                if((0 <= nx < self.size) and (0 <=ny < self.size) and self.maze[nx][ny] != Objects.WALL.value):
                     if( (nx, ny) not in visited):
+                        parent[(nx, ny)] = (x, y)
+                        visited.add((nx, ny))
                         if (nx, ny) == self.goal:
                             return self.__get_path(parent)
                         queue.append((nx, ny))
-                        visited.add((nx, ny))
-                        parent[(nx, ny)] = (x, y)
         
         return []
 
@@ -47,7 +48,8 @@ class searchAlgorithms:
             path.append(current)
             current = parent[current]
         
-        return path.reverse()
+        path.reverse()
+        return path
         
 
 
