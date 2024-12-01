@@ -2,6 +2,7 @@ from typing import List
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from maze import Maze
+from searchAlgorithms import SearchAlgorithms
 
 def visualize_maze(maze: List[List[int]]):
     cmap = ListedColormap(['white', 'black', 'red'])
@@ -26,6 +27,15 @@ def visualize_maze(maze: List[List[int]]):
 
 if __name__ == "__main__":
     maze = Maze(10)
-    maze.generate_maze()
+    maze.generate_maze(wall_probablity=0.3, trap_probablity=0.05)
     visualize_maze(maze.get_maze())
+
+    search = SearchAlgorithms(maze.get_maze(), maze.get_size(), maze.get_start(), maze.get_goal())
+    path = search.bfs()
+    if path:
+        print(f"Path found {path}")
+        print(f"Time taken to solve {search.get_time_to_solve()}")
+    else:
+        print("Maze cannot be solved")
+
 

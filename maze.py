@@ -1,6 +1,6 @@
 from typing import List
 import random
-from searchAlgorithms import SearchAlgorithms
+from collections import deque
 from objects import Objects
 
 class Maze:
@@ -25,8 +25,11 @@ class Maze:
     def get_maze(self) -> List[List[int]]:
         return self.maze
     
+    def get_size(self) -> int:
+        return self.size
+    
 
-    def generate_maze(self, wall_probablity: float = 0.3, trap_probablity: float = 0.1) -> None:
+    def generate_maze(self, wall_probablity: float = 0.3, trap_probablity: float = 0.01) -> None:
         while True:
             # Creating an empty maze here
             self.maze = [[0 for _ in range(self.size)] for _ in range(self.size)]
@@ -55,10 +58,25 @@ class Maze:
     
 
     def __is_path_exists(self):
-        bfs_search = SearchAlgorithms(self.maze, self.size, self.start, self.goal)
-        if not bfs_search.bfs():
-            return False
-        return True
+        queue = deque([self.start])
+        visited = set()
+        visited.add(self.start)
+
+        while(queue):
+            x, y = queue.popleft()
+            if (x, y) == self.goal:
+                return True
+            
+            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                nx, ny = x + dx, y + dy
+                if((0 <= nx < self.size) and (0 <=ny < self.size) and self.maze[nx][ny] != Objects.WALL.value):
+                    if( (nx, ny) not in visited):
+                        visited.add((nx, ny))
+                        if (nx, ny) == self.goal:
+                            return True
+                        queue.append((nx, ny))
+        
+        return False
 
             
             
