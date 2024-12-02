@@ -13,7 +13,31 @@ class SearchAlgorithms:
         self.end_time = -1
 
     def dfs(self):
-        pass
+        self.start_time = time.time()
+        stack = [self.start]
+        visited = set()
+        visited.add(self.start)
+        parent = {self.start: None}
+
+        while(stack):
+            x, y = stack.pop()
+            if (x, y) == self.goal:
+                self.end_time = time.time()
+                return self.__get_path(parent)
+            
+            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                nx, ny = x + dx, y + dy
+                if((0 <= nx < self.size) and (0 <=ny < self.size) and self.maze[nx][ny] == 0):
+                    if( (nx, ny) not in visited):
+                        parent[(nx, ny)] = (x, y)
+                        stack.append((nx, ny))
+                        visited.add((nx, ny))
+        
+        self.end_time = time.time()
+        return []
+
+
+
 
     def bfs(self) -> List:
         self.start_time = time.time()
