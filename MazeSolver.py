@@ -50,7 +50,7 @@ def visualise_maze_with_path(maze: List[List[int]], path: List[int], title: str)
 
 
 if __name__ == "__main__":
-    maze = Maze(10)
+    maze = Maze(40)
     maze.generate_maze(wall_probablity=0.3, trap_probablity=0.05)
 
     search = SearchAlgorithms(maze.get_maze(), maze.get_size(), maze.get_start(), maze.get_goal())
@@ -68,5 +68,11 @@ if __name__ == "__main__":
          visualise_maze_with_path(maze.get_maze(), path, f"Solving with DFS. Time taken: {search.get_time_to_solve()}")
     else:
         print("Maze cannot be solved by DFS")
+
+    path = search.a_star()
+    if path:
+        visualise_maze_with_path(maze.get_maze(), path, f"Solving with A-star. Time taken: {search.get_time_to_solve()}")
+    else:
+        print("Maze cannot be solved by A-star")
 
 

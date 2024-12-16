@@ -1,7 +1,7 @@
-from objects import Objects
 from collections import deque
 from typing import List
 import time
+import heapq
 
 class SearchAlgorithms:
     def __init__(self, maze: List[List[int]], size: int, start: tuple, goal: tuple) -> None:
@@ -65,10 +65,34 @@ class SearchAlgorithms:
         
         self.end_time = time.time()
         return []
-
     
-    def a_star(self):
-        pass
+
+    def __manhattan_distance(self, current: int) -> int:
+        return abs(current[0] - self.goal[0]) + abs(current[1] - self.goal[1])
+    
+    def a_star(self) -> List:
+        self.start_time = time.time()
+        priority_queue = []
+        heapq.heappush(priority_queue, (0, self.start))
+        visited = set()
+
+        parent = {self.start: None}
+
+        while priority_queue:
+            current_priority, current = heapq.heappop(priority_queue)
+            x, y = current
+            if (current not in visited):
+                visited.add(current)
+                if current == self.goal:
+                    self.end_time = time.time()
+                    return self.__get_path(parent)
+                
+                for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                    nx, ny = x + dx, y + dy
+                    if((0 <= nx < self.size) and (0 <=ny < self.size) and self.maze[nx][ny] == 0):
+                        if( (nx, ny) not in visited):
+                            parent[(nx, ny)] = (x, y)
+                            heapq.heappush(priority_queue, (self.__manhattan_distance((nx, ny)), (nx, ny)))
 
 
     def get_time_to_solve(self) -> int:
